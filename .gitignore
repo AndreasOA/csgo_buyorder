@@ -1,0 +1,9 @@
+# ignore Folders
+.vscode/
+__pycache__/
+
+
+# ignore files
+credentials.json
+send_message.py
+sendMessage.applescript
