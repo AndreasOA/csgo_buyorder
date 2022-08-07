@@ -1,7 +1,7 @@
 import re
 import pandas as pd
 import numpy as np
-from calc_resell_pot import *
+from src.calc_resell_pot import *
 
 SUGGESTED_PRICE_OVER_MIN_PERC = 1.3
 ACCEPTABLE_DISCOUNT = 0.70

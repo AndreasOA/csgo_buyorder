@@ -1,8 +1,8 @@
 from posixpath import split
-from skinbaron_get_marketpalce_data import *
-from skinport_get_marketplace_data import *
-from find_profit_items import *
-from calc_resell_pot import *
+from src.skinbaron_get_marketpalce_data import *
+from src.skinport_get_marketplace_data import *
+from src.find_profit_items import *
+from src.calc_resell_pot import *
 from time import sleep
 import time
 import pandas as pd
