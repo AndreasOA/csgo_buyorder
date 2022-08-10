@@ -1,14 +1,15 @@
-import urllib.request, json, urllib.error
+import requests
 import enum
-ST = "StatTrak%E2%84%A2 "
-FN = " (Factory New)"
-MW = " (Minimal Wear)"
-FT = " (Field-Tested)"
-WW = " (Well-Worn)"
-BS = " (Battle-Scarred)"
-SOUVENIR = "Souvenir "
+import json
+
+SPACE_SYMBOL = '%20'
+SPLITTER_SYMBOL = '%7C'
+LEFT_BRACKET_SYMBOL = '%28'
+RIGHT_BRACKET_SYMBOL = '%29'
+
 class AppId(enum.Enum):
   CSGO = 730
+
 class Currency(enum.Enum):
   USD = 1 # United States Dollars
   UKP = 2 # United Kingdom Pounds
@@ -21,24 +22,24 @@ class Currency(enum.Enum):
   SWD = 9 # Swedish Krona
   IND = 10 # Indonesian Rupiah
   MAL = 11 # Malaysian Ringgit
+  
 class MarketItem():
   sucess = False
-  lowest_price = ""
-  median_price = ""
+  lowest_price = 0.0
+  median_price = 0.0
   name = ""
   volume = 0
-def GetMarketItem(appid, name, currency = Currency.USD.value):
+  
+def GetMarketItem(appid, name, currency = Currency.EUR.value):
   strdat = ""
   Item = MarketItem()
-  name = name.replace(" ", "+")
-  try:
-    url = urllib.request.urlopen("http://steamcommunity.com/market/priceoverview/?appid=%s&currency=%s&market_hash_name=" % (appid, currency) + name)
-    data = json.loads(url.read().decode())
-    strdat = str(data)
-    Item.name = name.replace("+", " ").replace("StatTrak%E2%84%A2 ", "StatTrak ")
-  except urllib.error.URLError as e:
-    print("ERROR: %s" % e.reason)
-    return MarketItem()
+  name = name.replace(' ', SPACE_SYMBOL).replace('|', SPLITTER_SYMBOL).replace('(', LEFT_BRACKET_SYMBOL).replace(')',RIGHT_BRACKET_SYMBOL)
+  url = "http://steamcommunity.com/market/priceoverview/?appid=%s&currency=%s&market_hash_name=" % (appid, currency) + name
+  steam_dat = requests.get(url)
+
+  data = json.loads(steam_dat.read().decode())
+  strdat = str(data)
+  Item.name = name.replace("+", " ").replace("StatTrak%E2%84%A2 ", "StatTrak ")
   if (strdat.find("success': True") != -1):
     Item.sucess = True
   if (strdat.find('median_price') != -1):
@@ -48,6 +49,7 @@ def GetMarketItem(appid, name, currency = Currency.USD.value):
   if (strdat.find('volume') != -1):
     Item.volume = data['volume']
   return Item
+
 def PrintMarketItem(it, volume = False):
   if (len(it.name) > 0):
     print(it.name + ": ")
@@ -60,8 +62,5 @@ def PrintMarketItem(it, volume = False):
   if (volume and len(it.volume) > 0):
     print(it.volume)
 # - # - # - # - # - # - # - # - # -# - # - # - # - # - # - # - # - # - #
-PrintMarketItem(GetMarketItem(AppId.CSGO.value, ST + "AWP | PAW" + FN), False)
-
-
-# market_commodity_orders_header_promote
-
+if __name__ == '__main__':
+  PrintMarketItem(GetMarketItem(AppId.CSGO.value, ST + "AWP | PAW" + FN), 3)
