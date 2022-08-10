@@ -36,32 +36,35 @@ def find_profit_items(skins_data: list) -> list:
         skins_data_dict['profit_sp'] = 0.0
         skins_data_dict['sell_price_sp'] = 0.0
 
-    skins_data_dict['min_price_sb'] = min_price_sb
-    skins_data_dict['min_price_sp'] = min_price_sp
     skins_data_dict['link_sb'] = link_sb
     skins_data_dict['link_sp'] = link_sp
 
     if min_price_market < suggested_price * ACCEPTABLE_DISCOUNT:
         min_price_st, link_st = GetMarketItem(name)
         skins_data_dict['link_st'] = link_st
-        skins_data_dict['min_price_st'] = min_price_st
+        
         buy_price, sell_price, strat_sell_price = calc_resell_pot('sb' if sb_offer else 'sp', 
                                       min_price_market, 
                                       min_price_sp if sb_offer else min_price_sb,
                                       min_price_st)
         
+        skins_data_dict['min_price_st'] = min_price_st
         profit_st = strat_sell_price - buy_price
         profit_sp = sell_price - buy_price
         profit_sb = sell_price - buy_price
+
         if sb_offer:
             if profit_st > 1.00 and min_price_market < 50.00:
                 pass
-            
+            skins_data_dict['min_price_sb'] = buy_price
+            skins_data_dict['min_price_sp'] = min_price_sp
             skins_data_dict['profit_sp'] = profit_sp
             skins_data_dict['sell_price_sp'] = sell_price
         elif sp_offer:
             skins_data_dict['profit_sb'] = profit_sb
             skins_data_dict['sell_price_sb'] = sell_price
+            skins_data_dict['min_price_sp'] = buy_price
+            skins_data_dict['min_price_sb'] = min_price_sb
 
         skins_data_dict['profit_st'] = profit_st
         skins_data_dict['sell_price_st'] = strat_sell_price
