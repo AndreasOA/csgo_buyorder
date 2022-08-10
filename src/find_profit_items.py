@@ -13,6 +13,15 @@ def find_profit_items(skins_data: list) -> list:
     link_sb, link_sp, sb_id = skins_data
     skins_data_dict = {}
     skins_data_dict['item_name'] = name
+    skins_data_dict['min_price_st'] = 0
+    skins_data_dict['min_price_sp'] = 0
+    skins_data_dict['min_price_sb'] = 0
+    skins_data_dict['profit_st'] = 0.0
+    skins_data_dict['link_st'] = 0
+    skins_data_dict['sell_price_st'] = 0.0
+    skins_data_dict['sell_price_sp'] = 0.0
+    skins_data_dict['sell_price_sb'] = 0.0
+
     sb_offer = False
     sp_offer = False
     
@@ -28,12 +37,14 @@ def find_profit_items(skins_data: list) -> list:
         sb_offer = True
         skins_data_dict['marketplace'] = 'SKINBARON'
         skins_data_dict['profit_sb'] = 0.0
+        skins_data_dict['profit_sp'] = 0.0
         skins_data_dict['sell_price_sb'] = 0.0
     else:
         min_price_market = min_price_sp
         sp_offer = True
         skins_data_dict['marketplace'] = 'SKINPORT'
         skins_data_dict['profit_sp'] = 0.0
+        skins_data_dict['profit_sb'] = 0.0
         skins_data_dict['sell_price_sp'] = 0.0
 
     skins_data_dict['link_sb'] = link_sb
@@ -69,7 +80,10 @@ def find_profit_items(skins_data: list) -> list:
         skins_data_dict['profit_st'] = profit_st
         skins_data_dict['sell_price_st'] = strat_sell_price
 
-    return getDiscordMsg(skins_data_dict)
+        return getDiscordMsg(skins_data_dict)
+    
+    else:
+        return ''
 
 
 if __name__ == '__main__':
