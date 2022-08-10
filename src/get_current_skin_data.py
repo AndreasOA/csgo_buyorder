@@ -74,7 +74,7 @@ async def get_current_skin_data(api_key, dc_channel, sent_msg, df_sb, accepted_i
     df_below70perc_filtered = df_below70perc_filtered[df_below70perc_filtered['min_price'].notna()]
     if not single_search:
         df_below70perc_filtered = df_below70perc_filtered[df_below70perc_filtered['min_price_sb'].notna()]
-        df_below70perc_filtered['sell_price'] = df_below70perc_filtered.apply(lambda x: define_profit(x), axis = 1)
+        #df_below70perc_filtered['sell_price'] = df_below70perc_filtered.apply(lambda x: define_profit(x), axis = 1)
 
     # Filter for accepted items and get skinbaron data
     old_sent_msg = sent_msg.copy()
