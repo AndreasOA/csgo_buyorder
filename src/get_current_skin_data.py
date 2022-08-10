@@ -49,7 +49,7 @@ def define_profit(row):
 
 
 
-async def get_current_skin_data(api_key, dc_channel, sent_msg, df_sb, accepted_items, eor_string):
+async def get_current_skin_data(api_key, dc_channel, sent_msg, df_sb, accepted_items, eor_string, acceptable_discount):
     # Update Skinport Data
     print('fetching data...')
     start_time = time.time()
@@ -96,7 +96,7 @@ async def get_current_skin_data(api_key, dc_channel, sent_msg, df_sb, accepted_i
 
         skins_data = [item['market_hash_name'], item['suggested_price'], item['min_price'], 
                 float(min_price_sb), min_price_sb_db, item_page_sb,  item['item_page'], id_nr]
-        msg = find_profit_items(skins_data)
+        msg = find_profit_items(skins_data, acceptable_discount)
 
         if msg != '' and msg not in sent_msg:
             sent_msg.append(msg)

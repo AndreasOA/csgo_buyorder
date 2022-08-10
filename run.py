@@ -4,7 +4,11 @@ import discord
 import sys
 import json
 import pandas as pd
+import argparse
 
+parser = argparse.ArgumentParser()
+parser.add_argument('acceptable_discount', type=float)
+args = parser.parse_args()
 
 f = open("misc/credentials.json")
 data = json.load(f)
@@ -34,7 +38,7 @@ async def on_ready():
         while True:
             print('Finding offers....')
             sent_messages, df_sb = await get_current_skin_data(SB_API_KEY, channel, sent_messages, 
-                                                                df_sb, accepted_items, eor_string)
+                                                                df_sb, accepted_items, eor_string, args.acceptable_discount)
             print('offers found: ', len(sent_messages))
 
 

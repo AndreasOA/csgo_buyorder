@@ -7,7 +7,7 @@ ACCEPTABLE_DISCOUNT = 0.65
 GOOD_RESELL_DISCOUNT = 0.60
 
 
-def find_profit_items(skins_data: list) -> list:
+def find_profit_items(skins_data: list, acceptable_discount: float) -> list:
     name, suggested_price, min_price_sp, \
     min_price_sb, min_price_sb_db, \
     link_sb, link_sp, sb_id = skins_data
@@ -50,7 +50,7 @@ def find_profit_items(skins_data: list) -> list:
     skins_data_dict['link_sb'] = link_sb
     skins_data_dict['link_sp'] = link_sp
 
-    if min_price_market < suggested_price * ACCEPTABLE_DISCOUNT:
+    if min_price_market < suggested_price * acceptable_discount:
         min_price_st, link_st = GetMarketItem(name)
         skins_data_dict['link_st'] = link_st
         
