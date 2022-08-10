@@ -57,13 +57,13 @@ def find_profit_items(skins_data: list) -> list:
             if profit_st > 1.00 and min_price_market < 50.00:
                 pass
             
-            skins_data_dict['profit_sp'] = f'**{profit_sp}**' if profit_sp > 0 else profit_sp
+            skins_data_dict['profit_sp'] = profit_sp
             skins_data_dict['sell_price_sp'] = sell_price
         elif sp_offer:
-            skins_data_dict['profit_sb'] = f'**{profit_sb}**' if profit_sb > 0 else profit_sb
+            skins_data_dict['profit_sb'] = profit_sb
             skins_data_dict['sell_price_sb'] = sell_price
 
-        skins_data_dict['profit_st'] = f'**{profit_st}**' if profit_st > 0 else profit_st
+        skins_data_dict['profit_st'] = profit_st
         skins_data_dict['sell_price_st'] = strat_sell_price
 
     return getDiscordMsg(skins_data_dict)

@@ -3,7 +3,7 @@ def getDiscordMsg(skins_data: dict):
         resell_msg = f'**RESELL**\n'
     else:
         resell_msg = f'**NO PROFIT**\n'
-        
+    
     return  f"**{skins_data['marketplace']}** Deal: {skins_data['item_name']}\n" + \
             resell_msg + \
             f"Profit SB/SP/ST: {skins_data['profit_sb']}€ / {skins_data['profit_sp']}€ / {skins_data['profit_st']}€\n" + \
