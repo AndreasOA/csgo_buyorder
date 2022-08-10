@@ -13,5 +13,7 @@ def GetMarketItem(name):
   steam_dat = requests.get(url)
   time.sleep(2)
   data = json.loads(steam_dat.content.decode())
-
-  return float(data['lowest_price'].replace('€', '').replace(',', '.').strip()), 'https://steamcommunity.com/market/listings/730/' + name
+  try:
+    return float(data['lowest_price'].replace('€', '').replace(',', '.').strip()), 'https://steamcommunity.com/market/listings/730/' + name
+  except KeyError as ke:
+    return 0.0, url

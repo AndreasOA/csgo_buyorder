@@ -5,6 +5,7 @@ import sys
 import json
 import pandas as pd
 
+
 f = open("misc/credentials.json")
 data = json.load(f)
 f.close()
@@ -32,7 +33,8 @@ async def on_ready():
         df_sb = pd.DataFrame()
         while True:
             print('Finding offers....')
-            sent_messages, df_sb = await get_current_skin_data(SB_API_KEY, channel, sent_messages, df_sb, accepted_items, eor_string)
+            sent_messages, df_sb = await get_current_skin_data(SB_API_KEY, channel, sent_messages, 
+                                                                df_sb, accepted_items, eor_string)
             print('offers found: ', len(sent_messages))
 
 
