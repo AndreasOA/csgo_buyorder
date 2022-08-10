@@ -3,7 +3,7 @@ from src.calc_resell_pot import *
 from src.steam_market_scraper import GetMarketItem
 
 SUGGESTED_PRICE_OVER_MIN_PERC = 1.3
-ACCEPTABLE_DISCOUNT = 0.70
+ACCEPTABLE_DISCOUNT = 0.65
 GOOD_RESELL_DISCOUNT = 0.60
 
 
