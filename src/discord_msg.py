@@ -11,4 +11,4 @@ def getDiscordMsg(skins_data: dict):
             f"Sell SB/SP/ST: {skins_data['sell_price_sb']}€ / {skins_data['sell_price_sp']}€ / {skins_data['sell_price_st']}€\n" + \
             f"Link Skinbaron: {skins_data['link_sb']}\n" + \
             f"Link Skinport: {skins_data['link_sp']}\n" + \
-            f"Link Steam: {skins_data['link_s']}"
+            f"Link Steam: {skins_data['link_st']}"
