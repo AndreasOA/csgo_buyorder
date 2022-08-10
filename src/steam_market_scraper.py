@@ -12,6 +12,6 @@ def GetMarketItem(name):
   url = "http://steamcommunity.com/market/priceoverview/?appid=%s&currency=%s&market_hash_name=" % (730,3) + name
   steam_dat = requests.get(url)
   time.sleep(2)
-  data = json.loads(steam_dat.read().decode())
+  data = json.loads(steam_dat.content.decode())
 
   return data['lowest_price'], 'https://steamcommunity.com/market/listings/730/' + name
