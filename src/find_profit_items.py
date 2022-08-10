@@ -1,7 +1,6 @@
-import re
-import pandas as pd
-import numpy as np
+from src.discord_msg import *
 from src.calc_resell_pot import *
+from src.steam_market_scraper import GetMarketItem
 
 SUGGESTED_PRICE_OVER_MIN_PERC = 1.3
 ACCEPTABLE_DISCOUNT = 0.70
@@ -12,59 +11,62 @@ def find_profit_items(skins_data: list) -> list:
     name, suggested_price, min_price_sp, \
     min_price_sb, min_price_sb_db, \
     link_sb, link_sp, sb_id = skins_data
+    skins_data_dict = {}
+    skins_data_dict['item_name'] = name
     sb_offer = False
     sp_offer = False
+    
+    
     if min_price_sb_db and min_price_sb_db < min_price_sb:
-        link_sb = '**PRICE MISMATCH CHECK MANUAL**\n' + link_sb
+        name = '**PRICE MISMATCH**   ' + name
         min_price_sb = min_price_sb_db    
 
-    if min_price_sb == 0.0:
-        min_price_market = min_price_sp
-        sp_offer = True
-    elif min_price_sp == 0.0:
-        min_price_market = min_price_sb
-        sb_offer = True
+    if min_price_sb == 0.0 or min_price_sp == 0.0:
+        return ''
     elif min_price_sb < min_price_sp:
         min_price_market = min_price_sb
         sb_offer = True
+        skins_data_dict['marketplace'] = 'SKINBARON'
+        skins_data_dict['profit_sb'] = 0.0
+        skins_data_dict['sell_price_sb'] = 0.0
     else:
         min_price_market = min_price_sp
         sp_offer = True
+        skins_data_dict['marketplace'] = 'SKINPORT'
+        skins_data_dict['profit_sp'] = 0.0
+        skins_data_dict['sell_price_sp'] = 0.0
 
-    msg = ''
+    skins_data_dict['min_price_sb'] = min_price_sb
+    skins_data_dict['min_price_sp'] = min_price_sp
+    skins_data_dict['link_sb'] = link_sb
+    skins_data_dict['link_sp'] = link_sp
 
     if min_price_market < suggested_price * ACCEPTABLE_DISCOUNT:
-        sell_price = calc_resell_pot('sb' if sb_offer else 'sp', 
+        min_price_st, link_st = GetMarketItem(name)
+        skins_data_dict['link_st'] = link_st
+        skins_data_dict['min_price_st'] = min_price_st
+        buy_price, sell_price, strat_sell_price = calc_resell_pot('sb' if sb_offer else 'sp', 
                                       min_price_market, 
-                                      min_price_sp if sb_offer else min_price_sb
-                                    )
-        resell_profit_guar = sell_price - min_price_market
-        if resell_profit_guar > 0:
-            resell_msg = f'**RESELL WITH EST. PROFIT OF: {resell_profit_guar}**\n'
-        else:
-            resell_msg = '**NO PROFIT ON INSTA RESELL**\n'
+                                      min_price_sp if sb_offer else min_price_sb,
+                                      min_price_st)
+        
+        profit_st = strat_sell_price - buy_price
+        profit_sp = sell_price - buy_price
+        profit_sb = sell_price - buy_price
         if sb_offer:
-            if resell_profit_guar > 1.00 and min_price_market < 50.00:
+            if profit_st > 1.00 and min_price_market < 50.00:
                 pass
-            msg +=  '**SKINBARON** Deal: ' + name + '\n' + \
-                    resell_msg + \
-                    'Suggested Price: ' + str(suggested_price) + \
-                    '€\nBuy Price: ' + str(min_price_market) + \
-                    '€\nLowest Skinport Price: ' + str(min_price_sp) + \
-                    '€\nSell Price Skinport: ' + str(sell_price) + \
-                    '€\nLink Skinbaron: ' + link_sb + \
-                    '\nLink Skinport: ' +  link_sp
+            
+            skins_data_dict['profit_sp'] = f'**{profit_sp}**' if profit_sp > 0 else profit_sp
+            skins_data_dict['sell_price_sp'] = sell_price
         elif sp_offer:
-            msg +=  '**SKINPORT** Deal: ' + name + '\n' + \
-                    resell_msg + \
-                    'Suggested Price: ' + str(suggested_price) + \
-                    '€\nBuy Price: ' + str(min_price_market) + \
-                    '€\nLowest Skinbaron Price: ' + str(min_price_sb) + \
-                    '€\nSell Price Skinbaron: ' + str(sell_price) + \
-                    '€\nLink Skinport: ' + link_sp + \
-                    '\nLink Skinbaron: ' + link_sb
+            skins_data_dict['profit_sb'] = f'**{profit_sb}**' if profit_sb > 0 else profit_sb
+            skins_data_dict['sell_price_sb'] = sell_price
 
-    return msg
+        skins_data_dict['profit_st'] = f'**{profit_st}**' if profit_st > 0 else profit_st
+        skins_data_dict['sell_price_st'] = strat_sell_price
+
+    return getDiscordMsg(skins_data_dict)
 
 
 if __name__ == '__main__':
