@@ -15,5 +15,5 @@ def GetMarketItem(name):
   data = json.loads(steam_dat.content.decode())
   try:
     return float(data['lowest_price'].replace('€', '').replace(',', '.').replace('-', '0').strip()), 'https://steamcommunity.com/market/listings/730/' + name
-  except (KeyError, requests.exceptions.ConnectionError) as e:
+  except (KeyError, requests.exceptions.ConnectionError, TypeError) as e:
     return 0.0, 'https://steamcommunity.com/market/listings/730/' + name
