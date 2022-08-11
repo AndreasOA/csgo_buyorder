@@ -35,13 +35,16 @@ async def on_ready():
     split_f.close()
     df_sb = pd.DataFrame()
     steam_conn = True
-    i = 0
+    steam_cnt = 0
+    run_cnt = 0
     while True:
         print('Finding offers....')
         if not steam_conn:
-            i += 1
-        if i % 20 == 0:
+            steam_cnt += 1
+        if steam_cnt % 20 == 0:
             steam_conn = True
+        if run_cnt % 20 == 0:
+            await channel.send('SCRIPT STILL RUNNING')
         sent_messages, df_sb, steam_conn = await get_current_skin_data(SB_API_KEY, channel, sent_messages, 
                                                             df_sb, accepted_items, eor_string, args.acceptable_discount, steam_conn)
         print('offers found: ', len(sent_messages))
