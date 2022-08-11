@@ -98,10 +98,10 @@ async def get_current_skin_data(api_key, dc_channel, sent_msg, df_sb, accepted_i
 
         skins_data = [item['market_hash_name'], item['suggested_price'], item['min_price'], 
                 float(min_price_sb), min_price_sb_db, item_page_sb,  item['item_page'], id_nr]
-        msg, steam_conn = find_profit_items(skins_data, acceptable_discount, steam_conn)
+        msg, steam_conn, item_and_price = find_profit_items(skins_data, acceptable_discount, steam_conn)
 
-        if msg != '' and msg not in sent_msg:
-            sent_msg.append(msg)
+        if msg != '' and item_and_price not in sent_msg:
+            sent_msg.append(item_and_price)
             print('Offer found. ApeBot doing ape things.')
             await dc_channel.send(msg)
     

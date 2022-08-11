@@ -12,6 +12,7 @@ def find_profit_items(skins_data: list, acceptable_discount: float, steam_conn: 
     min_price_sb, min_price_sb_db, \
     link_sb, link_sp, sb_id = skins_data
     skins_data_dict = {}
+    buy_price = 0.0
     skins_data_dict['item_name'] = name
     skins_data_dict['min_price_st'] = 0
     skins_data_dict['min_price_sp'] = 0
@@ -31,7 +32,7 @@ def find_profit_items(skins_data: list, acceptable_discount: float, steam_conn: 
         min_price_sb = min_price_sb_db    
 
     if min_price_sb == 0.0 or min_price_sp == 0.0:
-        return '', steam_conn
+        return '', steam_conn, ''
     elif min_price_sb < min_price_sp:
         min_price_market = min_price_sb
         sb_offer = True
@@ -81,10 +82,10 @@ def find_profit_items(skins_data: list, acceptable_discount: float, steam_conn: 
         skins_data_dict['profit_st'] = profit_st
         skins_data_dict['sell_price_st'] = strat_sell_price
 
-        return getDiscordMsg(skins_data_dict), steam_conn
+        return getDiscordMsg(skins_data_dict), steam_conn, name + str(buy_price)
     
     else:
-        return '', steam_conn
+        return '', steam_conn, ''
 
 
 if __name__ == '__main__':

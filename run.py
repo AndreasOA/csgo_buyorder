@@ -47,6 +47,7 @@ async def on_ready():
             await channel.send('SCRIPT STILL RUNNING')
         sent_messages, df_sb, steam_conn = await get_current_skin_data(SB_API_KEY, channel, sent_messages, 
                                                             df_sb, accepted_items, eor_string, args.acceptable_discount, steam_conn)
+        run_cnt += 1
         print('offers found: ', len(sent_messages))
         
         
