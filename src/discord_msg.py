@@ -1,8 +1,8 @@
 def getDiscordMsg(skins_data: dict):
     if skins_data['profit_sb'] > 0 or skins_data['profit_sp'] > 0 or skins_data['profit_st'] > 0:
-        resell_msg = f'**RESELL**\n'
+        resell_msg = f'**RESELL {round(skins_data["discount"],2)*100}%**\n'
     else:
-        resell_msg = f'**NO PROFIT**\n'
+        resell_msg = f'**NO PROFIT {round(skins_data["discount"],2)*100}%**\n'
     
     return  f"**{skins_data['marketplace']}** Deal: {skins_data['item_name']}\n" + \
             resell_msg + \

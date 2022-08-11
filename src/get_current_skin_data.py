@@ -49,7 +49,7 @@ def define_profit(row):
 
 
 
-async def get_current_skin_data(api_key, dc_channel, sent_msg, df_sb, accepted_items, eor_string, acceptable_discount):
+async def get_current_skin_data(api_key, dc_channel, sent_msg, df_sb, accepted_items, eor_string, acceptable_discount, steam_conn):
     # Update Skinport Data
     print('fetching data...')
     start_time = time.time()
@@ -58,6 +58,7 @@ async def get_current_skin_data(api_key, dc_channel, sent_msg, df_sb, accepted_i
     df_sb_old = df_sb
     df_sb = pd.DataFrame.from_records(get_marketplace_list(api_key)['map'])
     df_diff_sb = pd.concat([df_sb, df_sb_old]).drop_duplicates(keep=False)
+
     if len(df_diff_sb) == 0:
         single_search = True
     else:
@@ -65,7 +66,8 @@ async def get_current_skin_data(api_key, dc_channel, sent_msg, df_sb, accepted_i
 
     if not single_search:
         print('Using DFs')
-        df_below70perc = df_sp[(df_sp['min_price']/df_sp['suggested_price'] < 0.7) | (df_sp['min_price_sb']/df_sp['suggested_price'] < 0.7)]
+        df_below70perc = df_sp[(df_sp['min_price']/df_sp['suggested_price'] < acceptable_discount) | 
+                        (df_sp['min_price_sb']/df_sp['suggested_price'] < acceptable_discount)]
     else:
         print('Using single search')
         df_below70perc = df_sp
@@ -96,7 +98,7 @@ async def get_current_skin_data(api_key, dc_channel, sent_msg, df_sb, accepted_i
 
         skins_data = [item['market_hash_name'], item['suggested_price'], item['min_price'], 
                 float(min_price_sb), min_price_sb_db, item_page_sb,  item['item_page'], id_nr]
-        msg = find_profit_items(skins_data, acceptable_discount)
+        msg, steam_conn = find_profit_items(skins_data, acceptable_discount, steam_conn)
 
         if msg != '' and msg not in sent_msg:
             sent_msg.append(msg)
@@ -107,7 +109,7 @@ async def get_current_skin_data(api_key, dc_channel, sent_msg, df_sb, accepted_i
         await dc_channel.send(eor_string)
     print(time.time()- start_time)
 
-    return sent_msg, df_sb
+    return sent_msg, df_sb, steam_conn
 
 
 if __name__ == '__main__':

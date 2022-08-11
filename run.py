@@ -33,17 +33,18 @@ async def on_ready():
     split_f = open('misc/split_string.txt', 'r')
     eor_string = split_f.read()
     split_f.close()
-    try:
-        df_sb = pd.DataFrame()
-        while True:
-            print('Finding offers....')
-            sent_messages, df_sb = await get_current_skin_data(SB_API_KEY, channel, sent_messages, 
-                                                                df_sb, accepted_items, eor_string, args.acceptable_discount)
-            print('offers found: ', len(sent_messages))
-
-
-    except KeyboardInterrupt:
-        sys.exit()
+    df_sb = pd.DataFrame()
+    steam_conn = True
+    i = 0
+    while True:
+        print('Finding offers....')
+        if not steam_conn:
+            i += 1
+        if i % 20 == 0:
+            steam_conn = True
+        sent_messages, df_sb, steam_conn = await get_current_skin_data(SB_API_KEY, channel, sent_messages, 
+                                                            df_sb, accepted_items, eor_string, args.acceptable_discount, steam_conn)
+        print('offers found: ', len(sent_messages))
         
         
 

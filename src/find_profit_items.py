@@ -7,7 +7,7 @@ ACCEPTABLE_DISCOUNT = 0.65
 GOOD_RESELL_DISCOUNT = 0.60
 
 
-def find_profit_items(skins_data: list, acceptable_discount: float) -> list:
+def find_profit_items(skins_data: list, acceptable_discount: float, steam_conn: bool) -> list:
     name, suggested_price, min_price_sp, \
     min_price_sb, min_price_sb_db, \
     link_sb, link_sp, sb_id = skins_data
@@ -31,7 +31,7 @@ def find_profit_items(skins_data: list, acceptable_discount: float) -> list:
         min_price_sb = min_price_sb_db    
 
     if min_price_sb == 0.0 or min_price_sp == 0.0:
-        return ''
+        return '', steam_conn
     elif min_price_sb < min_price_sp:
         min_price_market = min_price_sb
         sb_offer = True
@@ -47,11 +47,12 @@ def find_profit_items(skins_data: list, acceptable_discount: float) -> list:
         skins_data_dict['profit_sb'] = 0.0
         skins_data_dict['sell_price_sp'] = 0.0
 
+    skins_data_dict['discount'] = min_price_market / suggested_price
     skins_data_dict['link_sb'] = link_sb
     skins_data_dict['link_sp'] = link_sp
 
     if min_price_market < suggested_price * acceptable_discount:
-        min_price_st, link_st = GetMarketItem(name)
+        min_price_st, link_st, steam_conn = GetMarketItem(name, steam_conn)
         skins_data_dict['link_st'] = link_st
         
         buy_price, sell_price, strat_sell_price = calc_resell_pot('sb' if sb_offer else 'sp', 
@@ -80,10 +81,10 @@ def find_profit_items(skins_data: list, acceptable_discount: float) -> list:
         skins_data_dict['profit_st'] = profit_st
         skins_data_dict['sell_price_st'] = strat_sell_price
 
-        return getDiscordMsg(skins_data_dict)
+        return getDiscordMsg(skins_data_dict), steam_conn
     
     else:
-        return ''
+        return '', steam_conn
 
 
 if __name__ == '__main__':
