@@ -1,10 +1,7 @@
 from bs4 import BeautifulSoup
+from src.constants import *
 import time
 
-SPACE_SYMBOL = '%20'
-SPLITTER_SYMBOL = '%7C'
-LEFT_BRACKET_SYMBOL = '%28'
-RIGHT_BRACKET_SYMBOL = '%29'
 
 def get_buyorder(item_name, d, cr):
     item_name = item_name.replace(' ', SPACE_SYMBOL).replace('|', SPLITTER_SYMBOL).replace('(', LEFT_BRACKET_SYMBOL).replace(')',RIGHT_BRACKET_SYMBOL)

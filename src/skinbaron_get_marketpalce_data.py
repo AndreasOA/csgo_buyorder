@@ -22,7 +22,7 @@ def buy_marketplace_item(api_key, item_id, total_price):
     json_data = {
         "apikey": api_key,
         "total": total_price,
-        "toInventory": true,
+        "toInventory": "true",
         "saleids": [item_id]
         }
     return requests.post('https://api.skinbaron.de/BuyItems', headers=headers, json=json_data).json()

@@ -1,11 +1,8 @@
 import requests
 import time
 import json
+from src.constants import *
 
-SPACE_SYMBOL = '%20'
-SPLITTER_SYMBOL = '%7C'
-LEFT_BRACKET_SYMBOL = '%28'
-RIGHT_BRACKET_SYMBOL = '%29'
 
 def GetMarketItem(name, steam_conn):
   name = name.replace(' ', SPACE_SYMBOL).replace('|', SPLITTER_SYMBOL).replace('(', LEFT_BRACKET_SYMBOL).replace(')',RIGHT_BRACKET_SYMBOL)

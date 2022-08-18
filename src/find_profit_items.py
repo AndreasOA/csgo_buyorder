@@ -1,11 +1,7 @@
 from src.discord_msg import *
 from src.calc_resell_pot import *
 from src.steam_market_scraper import GetMarketItem
-
-SUGGESTED_PRICE_OVER_MIN_PERC = 1.3
-ACCEPTABLE_DISCOUNT = 0.65
-GOOD_RESELL_DISCOUNT = 0.60
-
+from src.constants import *
 
 def find_profit_items(skins_data: list, acceptable_discount: float, steam_conn: bool) -> list:
     name, suggested_price, min_price_sp, \

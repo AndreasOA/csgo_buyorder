@@ -2,7 +2,6 @@ import base64
 import requests
 
 
-
 def authentication(clientId, clientSecret):
     clientData = f"{clientId}:{clientSecret}"
     encodedData = str(base64.b64encode(clientData.encode("utf-8")), "utf-8")
