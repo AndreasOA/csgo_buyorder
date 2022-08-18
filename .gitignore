@@ -8,3 +8,4 @@ credentials.json
 send_message.py
 sendMessage.applescript
 .DS_Store
+steam_market_scraper_p2.py

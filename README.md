@@ -4,7 +4,7 @@ This python script helps finding and tracking the best offers for the items of y
 
 ## Installation
 
-Checkout this repo and create in the misc folder a file called credentials.json
+Checkout this repo and create a file in the misc folder called credentials.json
 
 ```json
 {
