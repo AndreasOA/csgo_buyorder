@@ -7,7 +7,6 @@ from time import sleep
 import time
 import pandas as pd
 
-SLEEP_TIME = 1
 
 def fix_suggested_price(row):
     suggested_price = row['suggested_price']
