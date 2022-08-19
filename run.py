@@ -1,7 +1,5 @@
-from src.get_current_skin_data import *
-from datetime import datetime
+from src.get_skindata import *
 import discord
-import sys
 import json
 import pandas as pd
 import argparse

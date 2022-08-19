@@ -1,14 +1,12 @@
-from posixpath import split
-from src.skinbaron_get_marketpalce_data import *
-from src.skinport_get_marketplace_data import *
+from src.marketplaces.skinbaron import *
+from src.marketplaces.skinport import *
 from src.find_profit_items import *
 from src.calc_resell_pot import *
-from time import sleep
 import time
 import pandas as pd
 
 
-def fix_suggested_price(row):
+def fix_suggested_price(row: pd.Series) -> float:
     suggested_price = row['suggested_price']
     if 'Doppler' in row['market_hash_name'] or 'Marble' in row['market_hash_name']:
         suggested_price = ((row['min_price_sb'] + row['min_price']) / 2) * 1.25
@@ -16,7 +14,7 @@ def fix_suggested_price(row):
     return suggested_price
 
 
-def sb_sp_merge(row, df_sb):
+def sb_sp_merge(row: pd.Series, df_sb: pd.DataFrame) -> pd.Series:
     try:
         name_sp, condition_sp = row['market_hash_name'].split(' (')
         condition_sp = condition_sp.replace(')', '').upper().replace(' ', '_').replace('-','_')
@@ -30,7 +28,7 @@ def sb_sp_merge(row, df_sb):
         return row['min_price']
 
 
-def define_profit(row):
+def define_profit(row: pd.Series) -> list:
     marketplace = ''
     if row['min_price'] == 0.00 or row['min_price_sb'] == 0.00:
         return -1.00
@@ -48,13 +46,13 @@ def define_profit(row):
 
 
 
-async def get_current_skin_data(api_key, dc_channel, sent_msg, df_sb, accepted_items, eor_string, acceptable_discount, steam_conn):
+async def get_current_skin_data(api_key: str, dc_channel: str, sent_msg: list, df_sb: pd.DataFrame, accepted_items: list, eor_string: str, acceptable_discount: float, steam_conn: bool) -> list:
     # Update Skinport Data
     print('fetching data...')
     start_time = time.time()
     single_search = False
     df_sp = pd.DataFrame.from_records(sp_get_marketplace_items())
-    df_sb_old = df_sb
+    df_sb_old = df_sb.copy()
     df_sb = pd.DataFrame.from_records(get_marketplace_list(api_key)['map'])
     df_diff_sb = pd.concat([df_sb, df_sb_old]).drop_duplicates(keep=False)
 
@@ -85,8 +83,7 @@ async def get_current_skin_data(api_key, dc_channel, sent_msg, df_sb, accepted_i
         name_condition = name_condition.replace(')', '')
         skinbaron_data = str(get_marketplace_items(name_query, api_key)).replace('},', '},\n')
         formatted_skinbaron_data = format_skinbaron_data(skinbaron_data, name_condition)
-        id_nr, name_sb, min_price_sb, mean_price_sb, \
-            max_price_sb, quantity_sb, item_page_sb = formatted_skinbaron_data
+        id_nr, n_, min_price_sb, me_, ma_, q_, item_page_sb = formatted_skinbaron_data
         min_price_sb = float(min_price_sb)
         item_page_sb = item_page_sb.replace("'", '')
 
@@ -108,7 +105,7 @@ async def get_current_skin_data(api_key, dc_channel, sent_msg, df_sb, accepted_i
         await dc_channel.send(eor_string)
     print(time.time()- start_time)
 
-    return sent_msg, df_sb, steam_conn
+    return [sent_msg, df_sb, steam_conn]
 
 
 if __name__ == '__main__':
