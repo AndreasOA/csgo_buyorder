@@ -1,3 +1,11 @@
+import json
+
+f = open("misc/credentials1.json")
+data = json.load(f)
+f.close()
+
+TELEGRAM_API_TOKEN = data['telegram']['api_token']
+TELEGRAM_CHAT_ID = data['telegram']['chat_id']
 # File for all constant values used
 ####################################################
 # Conv values for symbols in item name for link
@@ -25,3 +33,5 @@ SELL_BUFFER = 0.95
 #####################################################
 # Misc
 SLEEP_TIME = 1
+PHONE = data['telegram']['phone']
+URL = f"https://api.telegram.org/bot{TELEGRAM_API_TOKEN}/sendMessage?chat_id={TELEGRAM_CHAT_ID}&text="

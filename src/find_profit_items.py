@@ -1,6 +1,6 @@
 from src.discord_msg import *
 from src.calc_resell_pot import *
-from src.marketplaces.steam import GetMarketItemReq
+from src.marketplaces.steam import getMarketItemReq
 from src.constants import *
 
 def find_profit_items(skins_data: list, acceptable_discount: float, steam_conn: bool) -> list:
@@ -49,7 +49,7 @@ def find_profit_items(skins_data: list, acceptable_discount: float, steam_conn: 
     skins_data_dict['link_sp'] = link_sp
 
     if min_price_market < suggested_price * acceptable_discount:
-        min_price_st, link_st, steam_conn = GetMarketItemReq(name, steam_conn)
+        min_price_st, link_st, steam_conn = getMarketItemReq(name, steam_conn)
         skins_data_dict['link_st'] = link_st
         
         buy_price, sell_price, strat_sell_price = calc_resell_pot('sb' if sb_offer else 'sp', 
