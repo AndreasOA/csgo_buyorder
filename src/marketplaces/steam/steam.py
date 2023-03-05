@@ -4,6 +4,7 @@ import time
 import requests
 import json
 
+########### OUTDATED ####################
 
 def getMarketItemSel(item_name: str, d, cr):
     item_name = item_name.replace(' ', SPACE_SYMBOL).replace('|', SPLITTER_SYMBOL).replace('(', LEFT_BRACKET_SYMBOL).replace(')',RIGHT_BRACKET_SYMBOL)

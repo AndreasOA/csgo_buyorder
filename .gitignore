@@ -5,7 +5,9 @@ __pycache__/
 
 # ignore files
 credentials.json
+credentials_adv.json
 send_message.py
 sendMessage.applescript
 .DS_Store
 steam_market_scraper_p2.py
+skinport_selenium_buy.py

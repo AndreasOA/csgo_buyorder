@@ -1,5 +1,7 @@
 # CSGO Marketplace Buyorder
 
+## Currently only the Skinport Selenium implementation is working.
+
 This python script helps finding and tracking the best offers for the items of your choice.
 
 ## Installation
@@ -44,5 +46,5 @@ In **accepted_items.txt** one can add or remove skins, which should be monitored
 ## Known issues
 
 - Doppler and marble fade tracking does not work, since the sites treat them differently. Suggested Price at Skinport always suggests Sapphire or Ruby prices. Skinbaron treats phases seperatly. Lowest price does not differ between phase, therefore it is mostly only phase 1.
-- Script crrashes if one marketplace is down.
-- 
+- (Script crashes if one marketplace is down.)
+- Rework for Skinport with selenium, sometimes Bot protection causes issues. Make sure to use your google profile with the chrome instance of the webdriver

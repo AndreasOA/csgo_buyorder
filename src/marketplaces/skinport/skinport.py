@@ -3,6 +3,7 @@ from this import d
 import requests
 import time
 import pandas as pd
+import json
 from json import JSONDecodeError
 from requests_ip_rotator import ApiGateway
 from selenium import webdriver
@@ -56,23 +57,39 @@ def filter_data(data, accepted_items, acceptable_discount, type):
     data_not_rare_dc = data_not_rare_dc[data_not_rare_dc[min_price].notna()]
 
     return pd.concat([data_rare_dc, data_not_rare_dc])
-    
 
-def buy_sp_item(link_sp, price_db):
+def setup_selenium_sp(username, password):
     driver = webdriver.Chrome(r'chromedriver')
+    driver.get('https://skinport.com/de/signin')
+    email = driver.find_element_by_id('email')
+    email.send_keys(username)
+    pw = driver.find_element_by_id('password')
+    pw.send_keys(password)
+    login_button = driver.find_element_by_class_name("SubmitButton")
+    login_button.click()
+
+    return driver
+
+
+def buy_sp_item(driver, link_sp, price_db):
     driver.get(link_sp)
     item_price = driver.find_element_by_class_name("ItemPage-value")
     item_price = float(item_price.find_element_by_tag_name('div').text.replace("€", "").replace(",", ".").replace(" ", ""))
     if item_price == price_db:
-        add_to_cart = driver.find_elements_by_class_name("SubmitButton")
+        add_to_cart = driver.find_element_by_class_name("SubmitButton")
         add_to_cart.click()
         driver.get("https://skinport.com/de/cart")
         checkboxes = driver.find_elements_by_class_name("Checkbox-input")
         for checkbox in checkboxes:
             checkbox.click()
-        buy_button = driver.find_elements_by_class_name("SubmitButton")
+        buy_button = driver.find_element_by_class_name("SubmitButton")
         buy_button.click()
 
 
 
+
+if __name__ == '__main__':
+    f = open("misc/credentials1.json")
+    data = json.load(f)
+    f.close()
 

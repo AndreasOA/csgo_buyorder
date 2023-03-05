@@ -22,7 +22,6 @@ def find_profit_items(skins_data: list, acceptable_discount: float, steam_conn: 
     sb_offer = False
     sp_offer = False
     
-    
     if min_price_sb_db and min_price_sb_db < min_price_sb:
         skins_data_dict['item_name'] = '**PRICE MISMATCH**   ' + name
         min_price_sb = min_price_sb_db    
