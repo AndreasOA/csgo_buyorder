@@ -17,8 +17,8 @@ def authentication(clientId, clientSecret):
     return clientData, encodedData, authorizationHeaderString
 
 
-def sp_get_marketplace_items(session):
-    return session.get("https://api.skinport.com/v1/items", params={
+def sp_get_marketplace_items():
+    return requests.get("https://api.skinport.com/v1/items", params={
         "app_id": 730,
         "currency": "EUR",
         "tradable": 0
@@ -89,7 +89,9 @@ def buy_sp_item(driver, link_sp, price_db):
 
 
 if __name__ == '__main__':
-    f = open("misc/credentials1.json")
+    f = open("misc/credentials.json")
     data = json.load(f)
     f.close()
+    print(str(sp_get_marketplace_items()))
+
 

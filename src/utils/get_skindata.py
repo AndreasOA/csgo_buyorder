@@ -1,13 +1,13 @@
 from json import JSONDecodeError
-from marketplaces.skinbaron.skinbaron import *
-from marketplaces.skinport.skinport import *
-from src.find_profit_items import *
-from src.calc_resell_pot import *
-from src.discord_msg import *
+from src.marketplaces.skinbaron.skinbaron import *
+from src.marketplaces.skinport.skinport import *
+#from src.utils.find_profit_items import *
+#from src.utils.calc_resell_pot import *
+from src.utils.discord_msg import *
 import time
 import pandas as pd
 import requests
-
+from src.utils.constants import *
 
 def fix_suggested_price(row: pd.Series) -> float:
     suggested_price = row['suggested_price']
@@ -94,18 +94,18 @@ def get_current_skinport_data(accepted_items: list, acceptable_discount: float, 
         time.sleep(12)
 
 
-def get_current_skinbaron_data(api_key: str, accepted_items: list, acceptable_discount: float, session) -> list:
+def get_current_skinbaron_data(api_key: str, accepted_items: list, const: object) -> list:
     run_cnt = 0
     sent_msg = []
     while True:
         if run_cnt % 20 == 0:
-            requests.get(URL+'[SKINBARON] -  STILL RUNNING').json()
+            print('STILL RUNNING')
         # Update Skinport Data
         print('[SKINBARON] - Fetching data')
         start_time = time.time()
 
         try:
-            df_sp = pd.DataFrame.from_records(sp_get_marketplace_items(session))
+            df_sp = pd.DataFrame.from_records(sp_get_marketplace_items())
             df_sp['name'] = df_sp.apply(lambda x: rename_item(x), axis = 1)
             df_sp['condition'] = df_sp.apply(lambda x: rename_condition(x), axis = 1)
         except JSONDecodeError as je:
@@ -118,9 +118,9 @@ def get_current_skinbaron_data(api_key: str, accepted_items: list, acceptable_di
 
 
         for i, item in df_sp.iterrows():
-            acceptable_discount_temp = acceptable_discount
-            if item['market_hash_name'].find('★ ') != -1 and item["suggested_price"] > 400.0:
-                acceptable_discount_temp = acceptable_discount + 0.08
+            acceptable_discount_temp = const.ACCEPTABLE_DISCOUNT
+            #if item['market_hash_name'].find('★ ') != -1 and item["suggested_price"] > 400.0:
+            #    acceptable_discount_temp = const.ACCEPTABLE_DISCOUNT + 0.08
 
             name_query, name_condition = item['market_hash_name'].replace('★ ', '').split(' (')
             name_condition = name_condition.replace(')', '')
@@ -132,15 +132,28 @@ def get_current_skinbaron_data(api_key: str, accepted_items: list, acceptable_di
             id_nr, name_sb, min_price_sb, me_, ma_, q_, item_page_sb = formatted_skinbaron_data
             min_price_sb = float(min_price_sb)
             item_page_sb = item_page_sb.replace("'", '')
-            price_perc = ((min_price_sb * ( 1 + SB_BUY_FEE_SOFORT))/item["suggested_price"])
-            if ( price_perc < acceptable_discount_temp) and 'Souvenir' not in name_sb and min_price_sb != 0.0:
-                skins_data = {'item_name': item['market_hash_name'],'suggested_price': item['suggested_price'],'min_price': min_price_sb* ( 1 + SB_BUY_FEE_SOFORT),'link': item_page_sb}
-                msg = getDiscordMsg2(skins_data)
-
-                if msg != '' and msg not in sent_msg:
+            price_perc = ((min_price_sb * ( 1 + const.SB_BUY_FEE_SOFORT))/item["suggested_price"])
+            if ( price_perc < acceptable_discount_temp) and 'Souvenir' not in name_sb and 'Doppler' not in name_sb and 'Marble' not in name_sb and min_price_sb != 0.0:
+                skins_data = {'item_name': item['market_hash_name'],'suggested_price': item['suggested_price'],'min_price': min_price_sb* ( 1 + const.SB_BUY_FEE_SOFORT),'link': item_page_sb}
+                item_name = item['market_hash_name']
+                sugg_price = item['suggested_price']
+                msg = f'{item_name} - {round( (1 - price_perc)*100, 2)}% \n{round(min_price_sb * ( 1 + const.SB_BUY_FEE_SOFORT), 2)}€ / {sugg_price}€\n{item_page_sb}'
+                if msg not in sent_msg:
                     sent_msg.append(msg)
-                    print('Offer found. ApeBot doing ape things.')
-                    requests.get(URL+msg).json()
+                    requests.get(const.getTelegramURL()+msg).json()
+                    print(msg)
         
         run_cnt += 1
         print(time.time()- start_time)
+
+
+if __name__ == '__main__':
+    f = open("misc/credentials.json")
+    data = json.load(f)
+    f.close()
+
+    ai_f = open('misc/accepted_items.txt', 'r')
+    accepted_items = ai_f.read().replace("'", "").split("\n")
+    ai_f.close()
+
+    get_current_skinbaron_data(data['skinbaron_api_credentials']['api_key'], accepted_items, 0.9)

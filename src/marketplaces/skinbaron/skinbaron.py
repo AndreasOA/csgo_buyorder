@@ -65,7 +65,7 @@ def format_skinbaron_data(data, condition):
                 inspect, stickers, float_cond, app_id = filtered_list
         except ValueError as ve:
             id_nr, price, img, name, inspect_page, \
-                inspect, stickers, app_id = filtered_list
+                inspect= filtered_list[:6]
         if condition in name:
             nr_items += 1
             price = float(price)
@@ -87,7 +87,7 @@ def format_skinbaron_data(data, condition):
 
 
 if __name__ == '__main__':
-    f = open("credentials.json")
+    f = open("misc/credentials.json")
     data = json.load(f)
     #print(format_skinbaron_data(str(get_marketplace_items('Ursus Knife | Tiger Tooth', data['skinbaron_api_credentials']['api_key'])).replace('},', '},\n'), 'Factory New'))
     print(str(get_marketplace_list(data['skinbaron_api_credentials']['api_key'])))

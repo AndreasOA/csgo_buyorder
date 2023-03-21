@@ -1,6 +1,6 @@
 from src.discord_msg import *
 from src.calc_resell_pot import *
-from src.marketplaces.steam import getMarketItemReq
+from marketplaces.steam.steam import getMarketItemReq
 from src.constants import *
 
 def find_profit_items(skins_data: list, acceptable_discount: float, steam_conn: bool) -> list:
