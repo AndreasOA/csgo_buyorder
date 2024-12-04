@@ -1,4 +1,6 @@
-# CSGO Marketplace Buyorder
+# Outdated, because of bot protection :(
+
+## CSGO Marketplace Buyorder
 
 This python script helps finding and tracking the best offers for the items of your choice.
 
@@ -7,7 +9,7 @@ This python script helps finding and tracking the best offers for the items of y
 - API Skinbaron
 
 ### In Progress:
-- API Skinport (Endpoint Update Slow, not useful for snipping)
+- API Skinport (Endpoint Update Slow, not useful for finding cheap items)
 - API Skinbaron (Full Marketplace. Trick to detect items earlier)
 - Rework for Skinport with selenium, sometimes Bot protection causes issues. Make sure to use your google profile with the chrome instance of the webdriver
 
